@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import { Save, User, Clock, AlertCircle, Loader2, Zap } from 'lucide-react';
-import { Product, Category } from '../../../../lib/types';
+import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { Product, Category } from '../../../../lib/types';
 
 interface StockCount {
   packs: number;
@@ -11,7 +12,7 @@ interface StockCount {
 }
 
 export default function ClosingStockForm({ products }: { products: Product[] }) {
-  const [staffName, setStaffName] = useState("");
+  const { name } = useAuth();
   const [counts, setCounts] = useState<Record<string, StockCount>>({});
   const [electricityReading, setElectricityReading] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,7 +59,7 @@ export default function ClosingStockForm({ products }: { products: Product[] }) 
 
       await addDoc(collection(db, "stock_entries"), {
         type: "closing",
-        staffName,
+        staffName: name || "Unknown Staff",
         quantities: detailedQuantities,
         electricityReading: Number(electricityReading),
         timestamp: serverTimestamp(),
@@ -66,7 +67,6 @@ export default function ClosingStockForm({ products }: { products: Product[] }) 
       
       alert("Closing Stock and Utilities Log Saved!");
       setCounts({});
-      setStaffName("");
       setElectricityReading("");
     } catch (error: any) {
       console.error("Error saving closing stock:", error);
@@ -96,16 +96,11 @@ export default function ClosingStockForm({ products }: { products: Product[] }) 
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-600 flex items-center gap-2">
-              <User className="w-4 h-4 text-red-500" /> Final Staff Accountability
+              <User className="w-4 h-4 text-red-500" /> Accountable Staff
             </label>
-            <input 
-              required
-              type="text" 
-              placeholder="Enter your name"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-red-500 transition-colors"
-              value={staffName}
-              onChange={(e) => setStaffName(e.target.value)}
-            />
+            <div className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 text-slate-500 font-bold italic">
+              {name || "Loading identity..." }
+            </div>
           </div>
         </div>
       </div>

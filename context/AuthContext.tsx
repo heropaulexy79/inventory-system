@@ -10,18 +10,21 @@ type Role = 'admin' | 'staff' | null;
 interface AuthContextType {
   user: User | null;
   role: Role;
+  name: string | null;
   loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   role: null,
+  name: null,
   loading: true,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<Role>(null);
+  const [name, setName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,20 +33,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (authUser) {
         try {
           const userDoc = await getDoc(doc(db, 'users', authUser.uid));
-          console.log('[AuthContext] User UID:', authUser.uid);
-          console.log('[AuthContext] Document exists:', userDoc.exists());
           if (userDoc.exists()) {
             const data = userDoc.data();
             const fetchedRole = (data.role || 'staff').toString().trim() as Role;
             setRole(fetchedRole);
+            setName(data.name || null);
           } else {
             setRole('staff');
+            setName(null);
           }
         } catch (err: any) {
           setRole('staff');
+          setName(null);
         }
       } else {
         setRole(null);
+        setName(null);
       }
       setLoading(false);
     });
@@ -52,7 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, role, loading }}>
+    <AuthContext.Provider value={{ user, role, name, loading }}>
       {children}
     </AuthContext.Provider>
   );

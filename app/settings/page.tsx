@@ -1,7 +1,7 @@
 "use client";
 import Layout from '../../components/Layout';
 import { useAuth } from '@/context/AuthContext';
-import { Settings, Users, PlusCircle, Trash2, Mail } from 'lucide-react';
+import { Settings, Users, PlusCircle, Trash2, Mail, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -27,11 +27,13 @@ interface StaffMember {
   id: string;
   email: string;
   role: string;
+  name?: string;
 }
 
 export default function SettingsPage() {
   const { role } = useAuth();
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [staffList, setStaffList] = useState<StaffMember[]>([]);
@@ -57,10 +59,12 @@ export default function SettingsPage() {
       const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
       await setDoc(doc(db, 'users', cred.user.uid), {
         email: cred.user.email,
+        name: name,
         role: 'staff',
       });
-      alert(`Staff account created for ${email}!`);
+      alert(`Staff account created for ${name}!`);
       setEmail('');
+      setName('');
       setPassword('');
       // Sign out of the secondary instance immediately to keep it clean
       await secondaryAuth.signOut();
@@ -111,9 +115,12 @@ export default function SettingsPage() {
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                              <Mail className="w-4 h-4" />
+                              <User className="w-4 h-4" />
                             </div>
-                            <span className="text-sm font-medium text-slate-700">{staff.email}</span>
+                            <div>
+                              <p className="text-sm font-bold text-slate-900">{staff.name || 'Unnamed Staff'}</p>
+                              <p className="text-[10px] text-slate-400 font-mono">{staff.email}</p>
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 text-right">
@@ -141,6 +148,17 @@ export default function SettingsPage() {
               </div>
             </div>
             <form onSubmit={handleCreateStaff} className="p-6 space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-500 uppercase">Full Name</label>
+                <input
+                  required
+                  type="text"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-all text-sm"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. John Doe"
+                />
+              </div>
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-500 uppercase">Email Address</label>
                 <input

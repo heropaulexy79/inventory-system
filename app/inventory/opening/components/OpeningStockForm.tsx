@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { Save, User, Clock, ChevronRight, Loader2, Package, Layers } from 'lucide-react';
 import { Product, Category } from '../../../../lib/types';
+import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -11,7 +12,7 @@ interface StockCount {
 }
 
 export default function OpeningStockForm({ products }: { products: Product[] }) {
-  const [staffName, setStaffName] = useState("");
+  const { name } = useAuth();
   const [shift, setShift] = useState("morning");
   const [counts, setCounts] = useState<Record<string, StockCount>>({});
   const [loading, setLoading] = useState(false);
@@ -57,16 +58,14 @@ export default function OpeningStockForm({ products }: { products: Product[] }) 
       });
 
       await addDoc(collection(db, "stock_entries"), {
-        type: "opening",
-        staffName,
-        shift,
         quantities: detailedQuantities,
+        staffName: name || "Unknown Staff",
+        shift,
         timestamp: serverTimestamp(),
       });
       
       alert("Opening Stock Saved Successfully!");
       setCounts({});
-      setStaffName("");
     } catch (error: any) {
       console.error("Error saving opening stock:", error);
       alert("Failed to save: " + error.message);
@@ -95,16 +94,11 @@ export default function OpeningStockForm({ products }: { products: Product[] }) 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-600 flex items-center gap-2">
-              <User className="w-4 h-4 text-orange-500" /> Staff Name
+              <User className="w-4 h-4 text-orange-500" /> Staff Accountant
             </label>
-            <input 
-              required
-              type="text" 
-              placeholder="Enter your name"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-colors"
-              value={staffName}
-              onChange={(e) => setStaffName(e.target.value)}
-            />
+            <div className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 text-slate-500 font-bold">
+              {name || "Loading name..." }
+            </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-600 flex items-center gap-2">
