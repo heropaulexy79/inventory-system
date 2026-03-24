@@ -1,22 +1,38 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogIn, Lock, Mail, ChevronRight } from 'lucide-react';
+import { LogIn, Lock, Mail, ChevronRight, Loader2 } from 'lucide-react';
 import { login } from '@/firebase/auth';
+import { db } from '@/firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      await login(email, password);
-      router.push('/dashboard');
+      const userCredential = await login(email, password);
+      const user = userCredential.user;
+      
+      // Fetch role immediately for faster, smoother redirect
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const role = userDoc.exists() ? userDoc.data().role : 'staff';
+
+      if (role === 'admin') {
+        router.push('/dashboard');
+      } else {
+        router.push('/inventory/opening');
+      }
     } catch (error: any) {
       console.error("Login failed:", error.message);
       alert("Login failed: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,10 +81,12 @@ export default function LoginPage() {
             </div>
 
             <button 
+              disabled={loading}
               type="submit"
-              className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-4 rounded-2xl shadow-xl shadow-orange-500/20 hover:shadow-orange-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group active:scale-95"
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-4 rounded-2xl shadow-xl shadow-orange-500/20 hover:shadow-orange-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group active:scale-95 disabled:opacity-50"
             >
-              Sign In <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
+              {!loading && <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
             </button>
           </form>
 
