@@ -19,7 +19,7 @@ export interface User {
   orgId: string;
 }
 
-export type Category = 'drinks' | 'food' | 'ingredients' | 'packaging' | 'ice_cream' | 'other';
+export type Category = 'drinks' | 'food' | 'ice_cream' | 'packaging' | 'plates' | 'pie' | 'burger' | 'pizza' | 'other';
 
 export interface Product {
   id: string;
@@ -28,6 +28,7 @@ export interface Product {
   unit: string; // e.g., 'bottles', 'kg', 'liters'
   minStock: number;
   currentStock: number;
+  packSize?: number; // How many units per pack (optional)
   ingredients?: { ingredientId: string; quantity: number }[]; // For dishes
 }
 

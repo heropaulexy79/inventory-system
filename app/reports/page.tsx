@@ -159,13 +159,20 @@ export default function ReportsPage() {
                             <p className="text-[10px] text-blue-600 font-bold mb-1">⚡ Electricity: {log.electricityReading} kWh</p>
                           )}
                           <div className="flex flex-wrap gap-1">
-                            {Object.entries(log.quantities || {}).map(([pid, qty]: [any, any]) => (
-                                qty > 0 && (
-                                  <span key={pid} className="inline-block bg-slate-100 px-2 py-0.5 rounded text-[10px] text-slate-600">
-                                    {products[pid] || pid}: <span className="font-bold text-slate-900">{qty}</span>
+                            {Object.entries(log.quantities || {}).map(([pid, data]: [any, any]) => {
+                                const total = typeof data === 'number' ? data : data.total;
+                                const packs = data.packs || 0;
+                                const pieces = data.pieces || 0;
+                                
+                                return total > 0 && (
+                                  <span key={pid} className="inline-block bg-slate-100 px-2 py-0.5 rounded text-[10px] text-slate-600 border border-slate-200">
+                                    <span className="text-slate-500 font-medium">{products[pid] || pid}:</span>{" "}
+                                    <span className="font-bold text-slate-900">
+                                      {packs > 0 ? `${packs}pck + ` : ""}{pieces}
+                                    </span>
                                   </span>
-                                )
-                            ))}
+                                );
+                            })}
                           </div>
                         </div>
                       </td>

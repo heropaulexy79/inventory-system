@@ -95,7 +95,14 @@ export default function ProductsPage() {
                     <td className="px-6 py-4">
                       <span className="text-sm font-medium text-slate-700">{product.currentStock}</span>
                     </td>
-                    <td className="px-6 py-4 text-slate-500 text-sm">{product.unit}</td>
+                    <td className="px-6 py-4 text-slate-500 text-sm italic">
+                      {product.unit} 
+                      {product.packSize && product.packSize > 1 && (
+                        <span className="ml-1 text-[10px] text-orange-500 font-bold not-italic">
+                          ({product.packSize}/pck)
+                        </span>
+                      )}
+                    </td>
                     <td className="px-6 py-4">
                       {product.currentStock <= product.minStock ? (
                         <div className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full border border-red-100 w-fit">

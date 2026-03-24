@@ -13,10 +13,11 @@ interface AddProductModalProps {
 
 export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProductModalProps) {
   const [name, setName] = useState("");
-  const [category, setCategory] = useState<Category>("ingredients");
+  const [category, setCategory] = useState<Category>("food");
   const [unit, setUnit] = useState("");
   const [minStock, setMinStock] = useState(0);
   const [currentStock, setCurrentStock] = useState(0);
+  const [packSize, setPackSize] = useState<number>(1);
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -31,6 +32,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
         unit,
         minStock: Number(minStock),
         currentStock: Number(currentStock),
+        packSize: Number(packSize),
       });
       onSuccess();
       onClose();
@@ -39,6 +41,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
       setUnit("");
       setMinStock(0);
       setCurrentStock(0);
+      setPackSize(1);
     } catch (error: any) {
       console.error("Error adding product:", error);
       alert("Failed to add product: " + (error.message || "Unknown error"));
@@ -78,24 +81,47 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
                 value={category}
                 onChange={(e) => setCategory(e.target.value as Category)}
               >
-                <option value="ingredients">Ingredients</option>
                 <option value="food">Food</option>
                 <option value="drinks">Drinks</option>
-                <option value="packaging">Packaging</option>
                 <option value="ice_cream">Ice Cream</option>
+                <option value="packaging">Packaging/Nylon</option>
+                <option value="plates">Plates/Spoons</option>
+                <option value="pie">Pie</option>
+                <option value="burger">Burger</option>
+                <option value="pizza">Pizza</option>
                 <option value="other">Other</option>
               </select>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-500 uppercase">Unit</label>
+              <label className="text-xs font-bold text-slate-500 uppercase">Base Unit</label>
               <input 
                 required
                 type="text" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all font-medium text-slate-700"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                placeholder="kg, liters, pcs"
+                placeholder="pcs, kg, liters"
               />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-500 uppercase">Pack Size (Units/Pack)</label>
+              <input 
+                required
+                type="number" 
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all font-bold text-orange-600"
+                value={packSize}
+                onChange={(e) => setPackSize(Number(e.target.value))}
+                min={1}
+              />
+            </div>
+            <div className="space-y-1 opacity-50 cursor-not-allowed">
+              <label className="text-xs font-bold text-slate-500 uppercase">Inventory ID</label>
+              <div className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-400 flex items-center h-[42px]">
+                Auto-generated
+              </div>
             </div>
           </div>
 
