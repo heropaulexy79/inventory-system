@@ -1,14 +1,23 @@
 "use client";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 export default function RootPage() {
   const router = useRouter();
+  const { user, role, loading } = useAuth();
 
   useEffect(() => {
-    // Redirect to dashboard by default for demo
-    router.push('/dashboard');
-  }, [router]);
+    if (loading) return;
+    
+    if (!user) {
+      router.push('/auth/login');
+    } else if (role === 'admin') {
+      router.push('/dashboard');
+    } else {
+      router.push('/inventory/opening');
+    }
+  }, [user, role, loading, router]);
 
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center">

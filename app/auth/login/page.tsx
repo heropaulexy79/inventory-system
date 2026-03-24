@@ -21,7 +21,11 @@ export default function LoginPage() {
       
       // Fetch role immediately for faster, smoother redirect
       const userDoc = await getDoc(doc(db, "users", user.uid));
-      const role = userDoc.exists() ? userDoc.data().role : 'staff';
+      const roleData = userDoc.exists() ? userDoc.data() : { role: 'staff' };
+      const role = (roleData.role || 'staff').toString().trim().toLowerCase();
+      
+      console.log("[LoginPage] Full Role Data:", roleData);
+      console.log("[LoginPage] Detected role (normalized):", role);
 
       if (role === 'admin') {
         router.push('/dashboard');

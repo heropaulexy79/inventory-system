@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const userDoc = await getDoc(doc(db, 'users', authUser.uid));
           if (userDoc.exists()) {
             const data = userDoc.data();
-            const fetchedRole = (data.role || 'staff').toString().trim() as Role;
+            const fetchedRole = (data.role || 'staff').toString().trim().toLowerCase() as Role;
             setRole(fetchedRole);
             setName(data.name || null);
           } else {
