@@ -8,17 +8,24 @@ export default function RootPage() {
   const { user, role, loading } = useAuth();
 
   useEffect(() => {
+    console.log("[RootPage] Auth state changed:", { loading, user: user?.email, role });
     if (loading) return;
     if (!user) {
+      console.log("[RootPage] No user, redirecting to login.");
       router.push('/auth/login');
       return;
     }
     // Wait until role is resolved from Firestore before redirecting
-    if (role === null) return;
+    if (role === null) {
+      console.log("[RootPage] User authenticated but role still null, waiting...");
+      return;
+    }
 
     if (role === 'admin') {
+      console.log("[RootPage] Role is admin, redirecting to dashboard.");
       router.push('/dashboard');
     } else {
+      console.log("[RootPage] Role is not admin (" + role + "), redirecting to opening stock.");
       router.push('/inventory/opening');
     }
   }, [user, role, loading, router]);

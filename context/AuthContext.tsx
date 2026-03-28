@@ -31,22 +31,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const unsubscribe = subscribeToAuthChanges(async (authUser) => {
       setUser(authUser);
       if (authUser) {
+        console.log("[AuthContext] User authenticated:", authUser.email, authUser.uid);
         try {
-          const userDoc = await getDoc(doc(db, 'users', authUser.uid));
+          const userRef = doc(db, 'users', authUser.uid);
+          const userDoc = await getDoc(userRef);
+          
           if (userDoc.exists()) {
             const data = userDoc.data();
             const fetchedRole = (data.role || 'staff').toString().trim().toLowerCase() as Role;
+            console.log("[AuthContext] Role data found:", data);
+            console.log("[AuthContext] Resolved role:", fetchedRole);
             setRole(fetchedRole);
             setName(data.name || null);
           } else {
+            console.warn("[AuthContext] No user document found in Firestore for UID:", authUser.uid);
             setRole('staff');
             setName(null);
           }
         } catch (err: any) {
+          console.error("[AuthContext] Error fetching user role:", err);
           setRole('staff');
           setName(null);
         }
       } else {
+        console.log("[AuthContext] No user session found.");
         setRole(null);
         setName(null);
       }

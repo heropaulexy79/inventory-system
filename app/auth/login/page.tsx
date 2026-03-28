@@ -20,16 +20,25 @@ export default function LoginPage() {
       const user = userCredential.user;
       
       // Fetch role immediately for faster, smoother redirect
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      const roleData = userDoc.exists() ? userDoc.data() : { role: 'staff' };
-      const role = (roleData.role || 'staff').toString().trim().toLowerCase();
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
       
-      console.log("[LoginPage] Full Role Data:", roleData);
-      console.log("[LoginPage] Detected role (normalized):", role);
+      if (userDoc.exists()) {
+        const roleData = userDoc.data();
+        const role = (roleData.role || 'staff').toString().trim().toLowerCase();
+        console.log("[LoginPage] User document found:", roleData);
+        console.log("[LoginPage] Detected role:", role);
 
-      if (role === 'admin') {
-        router.push('/dashboard');
+        if (role === 'admin') {
+          console.log("[LoginPage] Redirecting to dashboard.");
+          router.push('/dashboard');
+        } else {
+          console.log("[LoginPage] Redirecting to opening stock (role is " + role + ").");
+          router.push('/inventory/opening');
+        }
       } else {
+        console.warn("[LoginPage] No user document found for UID:", user.uid);
+        console.log("[LoginPage] Redirecting to opening stock (default role: staff).");
         router.push('/inventory/opening');
       }
     } catch (error: any) {
