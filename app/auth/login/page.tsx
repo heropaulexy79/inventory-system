@@ -25,7 +25,10 @@ export default function LoginPage() {
       
       if (userDoc.exists()) {
         const roleData = userDoc.data();
-        const role = (roleData.role || 'staff').toString().trim().toLowerCase();
+        // Strip any surrounding quotes and normalize
+        const rawRole = (roleData.role || 'staff').toString().trim().toLowerCase();
+        const role = rawRole.replace(/^["'](.+)["']$/, '$1');
+        
         console.log("[LoginPage] User document found:", roleData);
         console.log("[LoginPage] Detected role:", role);
 

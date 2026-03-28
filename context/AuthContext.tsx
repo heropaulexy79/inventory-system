@@ -38,7 +38,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           
           if (userDoc.exists()) {
             const data = userDoc.data();
-            const fetchedRole = (data.role || 'staff').toString().trim().toLowerCase() as Role;
+            // Strip any surrounding quotes and normalize
+            const rawRole = (data.role || 'staff').toString().trim().toLowerCase();
+            const fetchedRole = rawRole.replace(/^["'](.+)["']$/, '$1') as Role;
+            
             console.log("[AuthContext] Role data found:", data);
             console.log("[AuthContext] Resolved role:", fetchedRole);
             setRole(fetchedRole);
