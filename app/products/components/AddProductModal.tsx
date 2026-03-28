@@ -66,7 +66,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
             <input 
               required
               type="text" 
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all text-slate-900"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Chicken Breast"
@@ -77,7 +77,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-500 uppercase">Category</label>
               <select 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all appearance-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all appearance-none text-slate-900"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as Category)}
               >
@@ -97,7 +97,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
               <input 
                 required
                 type="text" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all font-medium text-slate-700"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all font-medium text-slate-900"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
                 placeholder="pcs, kg, liters"
@@ -131,7 +131,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
               <input 
                 required
                 type="number" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all text-slate-900"
                 value={currentStock}
                 onChange={(e) => setCurrentStock(Number(e.target.value))}
               />
@@ -141,7 +141,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
               <input 
                 required
                 type="number" 
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-orange-500 transition-all text-slate-900"
                 value={minStock}
                 onChange={(e) => setMinStock(Number(e.target.value))}
               />

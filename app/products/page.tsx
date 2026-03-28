@@ -54,7 +54,7 @@ export default function ProductsPage() {
             <input 
               type="text" 
               placeholder="Search products..."
-              className="w-full bg-white border border-slate-200 rounded-xl pl-12 pr-4 py-3 outline-none focus:border-orange-500 transition-all"
+              className="w-full bg-white border border-slate-200 rounded-xl pl-12 pr-4 py-3 outline-none focus:border-orange-500 transition-all text-slate-900"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

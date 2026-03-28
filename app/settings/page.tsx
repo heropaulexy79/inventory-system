@@ -153,7 +153,7 @@ export default function SettingsPage() {
                 <input
                   required
                   type="text"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-all text-sm"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-all text-sm text-slate-900"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. John Doe"
@@ -164,7 +164,7 @@ export default function SettingsPage() {
                 <input
                   required
                   type="email"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-all text-sm"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-all text-sm text-slate-900"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="staff@restaurant.com"
@@ -175,7 +175,7 @@ export default function SettingsPage() {
                 <input
                   required
                   type="password"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-all text-sm"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-orange-500 transition-all text-sm text-slate-900"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min 6 characters"
