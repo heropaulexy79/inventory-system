@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { Save, User, Clock, AlertCircle, Loader2, Zap } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/config';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { Product, Category } from '../../../../lib/types';
 
 interface StockCount {
@@ -64,6 +64,17 @@ export default function ClosingStockForm({ products }: { products: Product[] }) 
         electricityReading: Number(electricityReading),
         timestamp: serverTimestamp(),
       });
+
+      // Update currentStock in products collection for each product in the entry
+      const updatePromises = Object.entries(detailedQuantities).map(([pid, data]) => {
+        const productRef = doc(db, "products", pid);
+        return updateDoc(productRef, {
+          currentStock: data.total
+        });
+      });
+
+      await Promise.all(updatePromises);
+
       
       alert("Closing Stock and Utilities Log Saved!");
       setCounts({});

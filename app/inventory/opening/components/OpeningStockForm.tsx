@@ -4,7 +4,7 @@ import { Save, User, Clock, ChevronRight, Loader2, Package, Layers } from 'lucid
 import { Product, Category } from '../../../../lib/types';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/config';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 
 interface StockCount {
   packs: number;
@@ -63,6 +63,17 @@ export default function OpeningStockForm({ products }: { products: Product[] }) 
         shift,
         timestamp: serverTimestamp(),
       });
+
+      // Update currentStock in products collection for each product in the entry
+      const updatePromises = Object.entries(detailedQuantities).map(([pid, data]) => {
+        const productRef = doc(db, "products", pid);
+        return updateDoc(productRef, {
+          currentStock: data.total
+        });
+      });
+
+      await Promise.all(updatePromises);
+
       
       alert("Opening Stock Saved Successfully!");
       setCounts({});
