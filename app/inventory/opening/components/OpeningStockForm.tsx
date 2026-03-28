@@ -77,6 +77,7 @@ export default function OpeningStockForm({ products }: { products: Product[] }) 
   const categoryLabels: Record<Category, string> = {
     drinks: "Drinks & Beverages",
     food: "Food & Ingredients",
+    ingredients: "Ingredients",
     ice_cream: "Ice Cream",
     packaging: "Packaging & Nylon",
     plates: "Plates & Cutlery",

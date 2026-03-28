@@ -1,6 +1,5 @@
 "use client";
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
   Package, 
@@ -25,6 +24,7 @@ const allMenuItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { role, loading } = useAuth();
 
   // Don't render until we know the role — prevents showing staff menu to admin
@@ -53,11 +53,11 @@ export default function Sidebar() {
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <Link
+            <button
               key={item.name}
-              href={item.href}
+              onClick={() => router.push(item.href)}
               className={cn(
-                "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group",
+                "w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group text-left",
                 isActive 
                   ? "bg-orange-500/10 text-orange-500 border border-orange-500/20" 
                   : "text-slate-400 hover:bg-slate-800 hover:text-white"
@@ -68,7 +68,7 @@ export default function Sidebar() {
                 <span className="font-medium">{item.name}</span>
               </div>
               {isActive && <ChevronRight className="w-4 h-4" />}
-            </Link>
+            </button>
           );
         })}
       </nav>

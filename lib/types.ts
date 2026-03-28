@@ -19,7 +19,7 @@ export interface User {
   orgId: string;
 }
 
-export type Category = 'drinks' | 'food' | 'ice_cream' | 'packaging' | 'plates' | 'pie' | 'burger' | 'pizza' | 'other';
+export type Category = 'drinks' | 'food' | 'ice_cream' | 'packaging' | 'plates' | 'pie' | 'burger' | 'pizza' | 'other' | 'ingredients';
 
 export interface Product {
   id: string;
