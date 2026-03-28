@@ -9,10 +9,14 @@ export default function RootPage() {
 
   useEffect(() => {
     if (loading) return;
-    
     if (!user) {
       router.push('/auth/login');
-    } else if (role === 'admin') {
+      return;
+    }
+    // Wait until role is resolved from Firestore before redirecting
+    if (role === null) return;
+
+    if (role === 'admin') {
       router.push('/dashboard');
     } else {
       router.push('/inventory/opening');
