@@ -6,6 +6,7 @@ import { generateWhatsAppReport } from '../../lib/consumptionCalculator';
 import { db } from '@/firebase/config';
 import { collection, query, orderBy, limit, onSnapshot, getDocs } from 'firebase/firestore';
 import { Product } from '@/lib/types';
+import toast from 'react-hot-toast';
 
 export default function ReportsPage() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -61,7 +62,7 @@ export default function ReportsPage() {
   const handleCopyReport = () => {
     const reportText = generateWhatsAppReport(mockReportData);
     navigator.clipboard.writeText(reportText);
-    alert("WhatsApp Report copied to clipboard!");
+    toast.success("WhatsApp Report copied to clipboard!");
   };
 
   return (
@@ -147,9 +148,9 @@ export default function ReportsPage() {
                       <td className="px-6 py-4 text-slate-500 font-mono whitespace-nowrap">{formatTimestamp(log.timestamp)}</td>
                       <td className="px-6 py-4">
                         <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
-                          log.type === 'opening' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                          (log.type || 'opening') === 'opening' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                         }`}>
-                          {log.type}
+                          {log.type || 'opening'}
                         </span>
                       </td>
                       <td className="px-6 py-4 font-medium text-slate-700">{log.staffName}</td>

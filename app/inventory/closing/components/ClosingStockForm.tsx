@@ -4,6 +4,7 @@ import { Save, User, Clock, AlertCircle, Loader2, Zap } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/config';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
+import toast from 'react-hot-toast';
 import { Product, Category } from '../../../../lib/types';
 
 interface StockCount {
@@ -76,12 +77,12 @@ export default function ClosingStockForm({ products }: { products: Product[] }) 
       await Promise.all(updatePromises);
 
       
-      alert("Closing Stock and Utilities Log Saved!");
+      toast.success("Closing Stock and Utilities Log Saved!");
       setCounts({});
       setElectricityReading("");
     } catch (error: any) {
       console.error("Error saving closing stock:", error);
-      alert("Failed to save: " + error.message);
+      toast.error("Failed to save: " + error.message);
     } finally {
       setLoading(false);
     }

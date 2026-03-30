@@ -4,6 +4,7 @@ import { X, Save } from 'lucide-react';
 import { db } from '@/firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
 import { Category } from '@/lib/types';
+import toast from 'react-hot-toast';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
         currentStock: Number(currentStock),
         packSize: Number(packSize),
       });
+      toast.success("Product added successfully!");
       onSuccess();
       onClose();
       // Reset form
@@ -44,7 +46,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }: AddProdu
       setPackSize(1);
     } catch (error: any) {
       console.error("Error adding product:", error);
-      alert("Failed to add product: " + (error.message || "Unknown error"));
+      toast.error("Failed to add product: " + (error.message || "Unknown error"));
     } finally {
       setLoading(false);
     }

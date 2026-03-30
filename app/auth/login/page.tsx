@@ -5,6 +5,7 @@ import { LogIn, Lock, Mail, ChevronRight, Loader2 } from 'lucide-react';
 import { login } from '@/firebase/auth';
 import { db } from '@/firebase/config';
 import { doc, getDoc } from 'firebase/firestore';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -46,7 +47,7 @@ export default function LoginPage() {
       }
     } catch (error: any) {
       console.error("Login failed:", error.message);
-      alert("Login failed: " + error.message);
+      toast.error("Login failed: " + error.message);
     } finally {
       setLoading(false);
     }

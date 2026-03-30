@@ -7,6 +7,7 @@ import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { db } from '@/firebase/config';
 import { doc, setDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
+import toast from 'react-hot-toast';
 
 // Secondary Firebase app for admin tasks (to prevent session logout)
 const firebaseConfig = {
@@ -62,14 +63,14 @@ export default function SettingsPage() {
         name: name,
         role: 'staff',
       });
-      alert(`Staff account created for ${name}!`);
+      toast.success(`Staff account created for ${name}!`);
       setEmail('');
       setName('');
       setPassword('');
       // Sign out of the secondary instance immediately to keep it clean
       await secondaryAuth.signOut();
     } catch (error: any) {
-      alert('Error creating staff account: ' + error.message);
+      toast.error('Error creating staff account: ' + error.message);
     } finally {
       setLoading(false);
     }

@@ -5,6 +5,7 @@ import { Product, Category } from '../../../../lib/types';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/config';
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
+import toast from 'react-hot-toast';
 
 interface StockCount {
   packs: number;
@@ -58,6 +59,7 @@ export default function OpeningStockForm({ products }: { products: Product[] }) 
       });
 
       await addDoc(collection(db, "stock_entries"), {
+        type: "opening",
         quantities: detailedQuantities,
         staffName: name || "Unknown Staff",
         shift,
@@ -75,11 +77,11 @@ export default function OpeningStockForm({ products }: { products: Product[] }) 
       await Promise.all(updatePromises);
 
       
-      alert("Opening Stock Saved Successfully!");
+      toast.success("Opening Stock Saved Successfully!");
       setCounts({});
     } catch (error: any) {
       console.error("Error saving opening stock:", error);
-      alert("Failed to save: " + error.message);
+      toast.error("Failed to save: " + error.message);
     } finally {
       setLoading(false);
     }
